@@ -6,7 +6,7 @@ services:
     container_name: dynamodb-local
     restart: unless-stopped
     volumes:
-      - ./password-manager-dynamodb:/home/dynamodblocal/data
+      - password-manager-dynamodb:/home/dynamodblocal/data
     ports:
       - "${DYNAMODB_PORT}:${DYNAMODB_PORT}"
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
