@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    restart: unless-stopped
+    volumes:
+      - ./password-manager-dynamodb:/home/dynamodblocal/data
+    ports:
+      - "${DYNAMODB_PORT}:${DYNAMODB_PORT}"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+
+volumes:
+  password-manager-dynamodb:
