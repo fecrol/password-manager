@@ -10,6 +10,7 @@ services:
     ports:
       - "${DYNAMODB_PORT}:${DYNAMODB_PORT}"
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/"
+    user: root
 
 volumes:
   password-manager-dynamodb:
