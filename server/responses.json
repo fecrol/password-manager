@@ -1,0 +1,15 @@
+{
+    "messages": {
+        "emailRequired": "email required",
+        "passwordRequired": "password required",
+        "userCreated": "account created successfully",
+        "userExists": "user already exists",
+        "internalServerError": "an internal server error has occured"
+    },
+    "statusCodes": {
+        "created": 201,
+        "badReq": 400,
+        "conflict": 409,
+        "internalServerError": 500
+    }
+}
