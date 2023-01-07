@@ -10,13 +10,10 @@ class DynamoDbDatabase extends DynamoDbConfig {
     constructor({region, endpoint, accessKeyId, secretAccessKey, tableSchemas}) {
         super({region, endpoint, accessKeyId, secretAccessKey})
 
-        if(DynamoDbDatabase.instance === null) {
-            tableSchemas.forEach((schema) => {
-                super.createTable(schema)
-            })
-
+        if(DynamoDbDatabase.instance == null) {
             this.#AWS = super.getAws()
             this.#docClient = new this.#AWS.DynamoDB.DocumentClient()
+
             DynamoDbDatabase.instance = this
         }
         
