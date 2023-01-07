@@ -30,7 +30,7 @@ class DynamoDbConfig {
     #awsConfig() {
 
         this.#AWS.config.update({
-            region: this.#region,
+            region: "localhost",
             endpoint: this.#endpoint,
             accessKeyId: this.#accessKeyId,
             secretAccessKey: this.#secretAccessKey
@@ -39,12 +39,11 @@ class DynamoDbConfig {
 
     createTable(schema) {
 
-        this.#ddb.listTables((err, data) => {
+        this.#ddb.listTables({}, (err, data) => {
             if(data.TableNames.includes(schema.TableName)) return
 
             this.#ddb.createTable(schema, (err, data) => {
-                if(err) console.log("Error: ", err)
-                else console.log(`${schema.TableName} created successfully`)
+                console.log(`${schema.TableName} created successfully`)
             })
         })
     }
