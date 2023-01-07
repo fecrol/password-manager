@@ -4,7 +4,8 @@
         "passwordRequired": "password required",
         "userCreated": "account created successfully",
         "userExists": "user already exists",
-        "internalServerError": "an internal server error has occured"
+        "internalServerError": "an internal server error has occured",
+        "passwordsMustMatch": "passwords do not match"
     },
     "statusCodes": {
         "created": 201,
