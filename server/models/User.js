@@ -7,7 +7,7 @@ class User {
     #dateJoined
     #blocked
     
-    constructor(docClient) {
+    constructor({docClient}) {
         this.#docClient = docClient
 
         this.#id
@@ -17,15 +17,7 @@ class User {
         this.#blocked
     }
 
-    getUser() {
-        return {id: this.#id, email: this.#email, dateJoined: this.#dateJoined, blocked: this.#blocked}
-    }
-
-    getDoc() {
-        return this.#docClient
-    }
-
-    create() {
+    async create() {
         const params = {
             TableName: "USERS",
             Item: {
@@ -37,14 +29,56 @@ class User {
             }
         }
 
-        let error
-        
-        this.#docClient.put(params, (err) => {
-            if(err) error = err
+        let response
+
+        await this.#docClient.put(params, (err) => {
+            if(err) response = {error: err}
+            else response = {user: this.getUser()}
         }).promise()
 
-        if(error) return error
-        return 0
+        return response
+    }
+
+    async readById(id) {
+        const params = {
+            TableName: "USERS",
+            Key: {user_id: id}
+        }
+
+        const response = await this.#docClient.get(params).promise()
+        if(response.Item.password) delete response.Item.password
+        return response.Item
+    }
+
+    async checkIfUserExists(email) {
+
+        const users = await this.#readAll()
+        const user = users.find(user => {
+            return user.email === email
+        })
+
+        return user ? true : false
+    }
+
+    async #readAll() {
+        const params = {
+            TableName: "USERS",
+        }
+
+        const response = await this.#docClient.scan(params).promise()
+        return response.Items
+    }
+
+    getUser() {
+        return {id: this.#id, email: this.#email, dateJoined: this.#dateJoined, blocked: this.#blocked}
+    }
+
+    setUser({id, email, password, dateJoined, blocked}) {
+        this.setId(id)
+        this.setEmail(email)
+        this.setPassword(password)
+        this.setDateJoined(dateJoined)
+        this.setBlocked(blocked)
     }
 
     getId() {
