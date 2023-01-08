@@ -8,20 +8,6 @@ const crypto = require("crypto")
 const User = require("../models/User")
 const db = require("../db/DynamoDbDatabase")
 
-const users = []
-
-route.get("/", (req, res) => {
-    res.status(200)
-
-    listOfUsers = []
-
-    users.forEach(user => {
-        listOfUsers.push(user.getUser())
-    })
-
-    res.json(listOfUsers)
-})
-
 route.post("/register", dataSantiser.sanitise(), async (req, res) => {
 
     const id = crypto.randomUUID()
@@ -34,25 +20,22 @@ route.post("/register", dataSantiser.sanitise(), async (req, res) => {
     if(!email) return res.status(responses.statusCodes.badReq).json({message: responses.messages.emailRequired})
     if(!password || !repeatPassword) return res.status(responses.statusCodes.badReq).json({message: responses.messages.passwordRequired})
 
-    const foundUser = users.find(user => user.getEmail() === req.body.email)
+    const user = new User({docClient: db.getDynamoDocClient()})
+
+    const foundUser = await user.checkIfUserExists(email)
     if(foundUser) return res.status(responses.statusCodes.conflict).json({message: responses.messages.userExists})
 
     if(password !== repeatPassword) return res.status(responses.statusCodes.badReq).json({message: responses.messages.passwordsMustMatch})
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new User(db.getDynamoDocClient())
-        user.setId(id)
-        user.setEmail(email)
-        user.setPassword(hashedPassword)
-        user.setDateJoined(dateJoined)
-        user.setBlocked(blocked)
+        user.setUser({id, email, hashedPassword, dateJoined, blocked})
 
-        const result = user.create()
-        if(result !== 0) return res.status(responses.statusCodes.internalServerError).json({message: result})
+        const result = await user.create()
+        if(!result.user) return res.status(responses.statusCodes.internalServerError).json({message: result})
 
         res.status(responses.statusCodes.created)
-        res.json({message: responses.messages.userCreated, user: user.getUser()})
+        res.json({message: responses.messages.userCreated, user: result.user})
     }
     catch(err) {
         res.status(responses.statusCodes.internalServerError).json({message: responses.messages.internalServerError})
