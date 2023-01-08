@@ -3,13 +3,11 @@ require("dotenv").config({ path: "./.env" })
 class DynamoDbConfig {
 
     #AWS
-    #region
-    #endpoint
     #accessKeyId
     #secretAccessKey
     #ddb
 
-    constructor({region, endpoint, accessKeyId, secretAccessKey}) {
+    constructor({accessKeyId, secretAccessKey}) {
 
         if(this.constructor === DynamoDbConfig) {
             throw new Error("Abstract classes can't be instantiated.")
@@ -17,8 +15,6 @@ class DynamoDbConfig {
 
         this.#AWS = require("aws-sdk")
 
-        this.#region = region
-        this.#endpoint = endpoint
         this.#accessKeyId = accessKeyId
         this.#secretAccessKey = secretAccessKey
 
@@ -31,7 +27,7 @@ class DynamoDbConfig {
 
         this.#AWS.config.update({
             region: "localhost",
-            endpoint: this.#endpoint,
+            endpoint: "http://localhost:8000",
             accessKeyId: this.#accessKeyId,
             secretAccessKey: this.#secretAccessKey
         })
