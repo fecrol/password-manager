@@ -1,5 +1,4 @@
 const DynamoDbConfig = require("./DynamoDbConfig")
-const tableSchema = require("./tablesSchema.json")
 require("dotenv").config({ path: "./.env" })
 
 class DynamoDbDatabase extends DynamoDbConfig {
@@ -25,12 +24,9 @@ class DynamoDbDatabase extends DynamoDbConfig {
     }
 }
 
-const region = process.env.AWS_REGION
-const endpoint = process.env.AWS_ENDPOINT
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
-const tableSchemas = [tableSchema.usersTable]
 
-db = new DynamoDbDatabase({region, endpoint, accessKeyId, secretAccessKey, tableSchemas})
+db = new DynamoDbDatabase({accessKeyId, secretAccessKey})
 Object.freeze(db)
 module.exports = db
