@@ -16,6 +16,25 @@
             "ReadCapacityUnits": 1,
             "WriteCapacityUnits": 1
           },
-          "TableName": "USERS"
+        "TableName": "USERS"
+    },
+    "credentialsTable": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "credential_id",
+                "AttributeType": "S"
+            }
+        ],
+        "KeySchema": [
+            {
+                "AttributeName": "credential_id",
+                "KeyType": "HASH"
+            }
+        ],
+        "ProvisionedThroughput": {
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+          },
+        "TableName": "CREDENTIALS"
     }
 }
