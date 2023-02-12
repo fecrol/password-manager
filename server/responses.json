@@ -4,10 +4,15 @@
         "passwordRequired": "password required",
         "userCreated": "account created successfully",
         "userExists": "user already exists",
-        "internalServerError": "an internal server error has occured",
-        "passwordsMustMatch": "passwords do not match"
+        "internalServerError": "internal server error has occured",
+        "passwordsMustMatch": "passwords do not match",
+        "platformRequired": "platform required",
+        "credentialAdded": "credential added successfully",
+        "userIdRequired": "user id required",
+        "userNotFound": "user not found"
     },
     "statusCodes": {
+        "ok": 200,
         "created": 201,
         "badReq": 400,
         "conflict": 409,
