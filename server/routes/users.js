@@ -8,6 +8,11 @@ const crypto = require("crypto")
 const User = require("../models/User")
 const db = require("../db/DynamoDbDatabase")
 
+route.get("/", async (req, res) => {
+    const user = new User({docClient: db.getDynamoDocClient()})
+    res.send(await user.readAll())
+})
+
 route.post("/register", dataSantiser.sanitise(), async (req, res) => {
 
     const id = crypto.randomUUID()
@@ -22,7 +27,7 @@ route.post("/register", dataSantiser.sanitise(), async (req, res) => {
 
     const user = new User({docClient: db.getDynamoDocClient()})
 
-    const foundUser = await user.checkIfUserExists(email)
+    const foundUser = await user.readByEmail(email)
     if(foundUser) return res.status(responses.statusCodes.conflict).json({message: responses.messages.userExists})
 
     if(password !== repeatPassword) return res.status(responses.statusCodes.badReq).json({message: responses.messages.passwordsMustMatch})
@@ -35,7 +40,7 @@ route.post("/register", dataSantiser.sanitise(), async (req, res) => {
         if(!result.user) return res.status(responses.statusCodes.internalServerError).json({message: result})
 
         res.status(responses.statusCodes.created)
-        res.json({message: responses.messages.userCreated, user: result.user})
+        res.json({user: result.user})
     }
     catch(err) {
         res.status(responses.statusCodes.internalServerError).json({message: responses.messages.internalServerError})
