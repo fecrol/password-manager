@@ -46,7 +46,6 @@ class User {
         }
 
         const response = await this.#docClient.get(params).promise()
-        if(response.Item && response.Item.password) delete response.Item.password
         return response.Item
     }
 
@@ -66,9 +65,6 @@ class User {
         }
 
         const response = await this.#docClient.scan(params).promise()
-        response.Items.forEach((user) => {
-            if(user.password) delete user.password
-        })
         return response.Items
     }
 
