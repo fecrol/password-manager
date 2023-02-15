@@ -9,7 +9,9 @@
         "platformRequired": "platform required",
         "credentialAdded": "credential added successfully",
         "userIdRequired": "user id required",
-        "userNotFound": "user not found"
+        "userNotFound": "user not found",
+        "invalidEmail": "invalid email address",
+        "invalidPassword": "invalid password"
     },
     "statusCodes": {
         "ok": 200,
