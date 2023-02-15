@@ -75,7 +75,7 @@ route.post("/", dataSantiser.sanitise(), async (req, res) => {
 
     if(response.error) res.status(responses.statusCodes.internalServerError).json({error: response.error})
 
-    res.status(responses.statusCodes.created).json({credential: response.credential})
+    res.status(responses.statusCodes.created).json(response.credential)
 })
 
 module.exports = route
