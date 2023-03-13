@@ -6,11 +6,13 @@ const crypto = require("crypto")
 const User = require("../models/User")
 const db = require("../db/DynamoDbDatabase")
 const Credential = require("../models/Credential")
+const authenticator = require("../middleware/authenticator")
+
+route.use(authenticator.authenticateToken)
 
 route.get("/", async (req, res) => {
     try {
-
-        const userId = req.body.userId
+        const userId = req.user.userId
         if(!userId) return res.status(responses.statusCodes.badReq).json({message: responses.messages.userIdRequired})
         
         const user = new User({docClient: db.getDynamoDocClient()})
@@ -72,6 +74,7 @@ route.post("/", dataSantiser.sanitise(), async (req, res) => {
     })
 
     const response = await newCredential.create()
+    
 
     if(response.error) res.status(responses.statusCodes.internalServerError).json({error: response.error})
 
