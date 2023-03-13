@@ -8,6 +8,7 @@ const crypto = require("crypto")
 const User = require("../models/User")
 const db = require("../db/DynamoDbDatabase")
 const authenticator = require("../middleware/authenticator")
+const jwt = require("jsonwebtoken")
 
 if(process.env.NODE_ENV !== "production") require("dotenv").config({ path: "../../.env" })
 
@@ -29,7 +30,6 @@ route.post("/login", dataSantiser.sanitise(), async (req, res) => {
 
         const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
         const accessTokenDuration = process.env.ACCESS_TOKEN_DURATION
-
         const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
         
         const accessToken = authenticator.generateJwtToken({user: foundUser, secret: accessTokenSecret, expirationTime: accessTokenDuration})
@@ -73,6 +73,23 @@ route.post("/register", dataSantiser.sanitise(), async (req, res) => {
     catch(err) {
         res.status(responses.statusCodes.internalServerError).json({message: responses.messages.internalServerError})
     }
+})
+
+route.post("/token", (req, res) => {
+    const refreshToken = req.body.refreshToken
+
+    if(!refreshToken) return res.status(responses.statusCodes.unauthorized).json({message: responses.messages.unauthorized})
+
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if(err) return res.status(responses.statusCodes.forbidden).json({message: responses.messages.forbidden})
+
+        const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+        const accessTokenDuration = process.env.ACCESS_TOKEN_DURATION
+
+        const accessToken = authenticator.generateJwtToken({user: user, secret: accessTokenSecret, expirationTime: accessTokenDuration})
+
+        res.status(responses.statusCodes.created).json({accessToken})
+    })
 })
 
 module.exports = route
