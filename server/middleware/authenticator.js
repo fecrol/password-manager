@@ -17,7 +17,7 @@ function authenticateToken(req, res, next) {
 }
 
 function generateJwtToken({user, secret, expirationTime}) {
-    return expirationTime ? jwt.sign({userId: user.user_id}, secret, {expiresIn: expirationTime}) : jwt.sign({userId: user.user_id}, secret)
+    return expirationTime ? jwt.sign({user_id: user.user_id}, secret, {expiresIn: expirationTime}) : jwt.sign({user_id: user.user_id}, secret)
 }
 
 module.exports = {
