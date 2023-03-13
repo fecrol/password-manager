@@ -12,7 +12,7 @@ route.use(authenticator.authenticateToken)
 
 route.get("/", async (req, res) => {
     try {
-        const userId = req.user.userId
+        const userId = req.user.user_id
         if(!userId) return res.status(responses.statusCodes.badReq).json({message: responses.messages.userIdRequired})
         
         const user = new User({docClient: db.getDynamoDocClient()})
@@ -37,11 +37,12 @@ route.get("/:id", (req, res) => {
 
 route.post("/", dataSantiser.sanitise(), async (req, res) => {
     const reqBody = req.body
+    const userId = req.user.user_id
     const id = crypto.randomUUID()
 
     const credentials = {
         id: id,
-        userId: reqBody.userId,
+        userId: userId,
         platform: reqBody.platform,
         email: reqBody.email,
         username: reqBody.username,
