@@ -11,12 +11,16 @@
         "userIdRequired": "user id required",
         "userNotFound": "user not found",
         "invalidEmail": "invalid email address",
-        "invalidPassword": "invalid password"
+        "invalidPassword": "invalid password",
+        "unauthorized": "unauthorized",
+        "forbidden": "forbidden"
     },
     "statusCodes": {
         "ok": 200,
         "created": 201,
         "badReq": 400,
+        "unauthorized": 401,
+        "forbidden": 403,
         "conflict": 409,
         "internalServerError": 500
     }
